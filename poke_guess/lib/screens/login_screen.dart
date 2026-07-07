@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/auth_service.dart';
+import '../services/auth_services.dart';
 import '../providers/game_provider.dart';
 import 'game_screen.dart';
 

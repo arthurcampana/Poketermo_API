@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/pokemon.dart';
 import '../models/guess.dart';
 import '../services/poke_api_service.dart';
-import '../services/auth_service.dart';
+import '../services/auth_services.dart';
 
 class GameProvider extends ChangeNotifier {
   final PokeApiService _apiService = PokeApiService();
