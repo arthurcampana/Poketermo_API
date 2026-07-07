@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../models/pokemon.dart';
 import '../models/guess.dart';
 import '../services/poke_api_service.dart';
+import '../services/auth_service.dart';
 
 class GameProvider extends ChangeNotifier {
   final PokeApiService _apiService = PokeApiService();
+  final AuthService _authService = AuthService();
   
   Pokemon? dailyPokemon;
   List<Guess> guesses = [];
@@ -12,7 +14,15 @@ class GameProvider extends ChangeNotifier {
   bool isLoading = false;
   bool hasWon = false;
   String? errorMessage;
+  
+  String? loggedUsername;
   int wins = 0;
+
+  void setLoggedInUser(String username, int userWins) {
+    loggedUsername = username;
+    wins = userWins;
+    notifyListeners();
+  }
 
   Future<void> startNewGame() async {
     isLoading = true;
@@ -101,6 +111,9 @@ class GameProvider extends ChangeNotifier {
     if (newGuess.isCorrect) {
       hasWon = true;
       wins++;
+      if (loggedUsername != null) {
+        _authService.registrarVitoria(loggedUsername!);
+      }
     }
 
     isLoading = false;

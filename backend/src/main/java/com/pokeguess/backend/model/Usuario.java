@@ -16,15 +16,17 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    // Construtores
+    @Column(nullable = false)
+    private int wins = 0;
+
     public Usuario() {}
 
     public Usuario(String username, String password) {
         this.username = username;
         this.password = password;
+        this.wins = 0;
     }
 
-    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -33,4 +35,7 @@ public class Usuario {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public int getWins() { return wins; }
+    public void setWins(int wins) { this.wins = wins; }
 }
