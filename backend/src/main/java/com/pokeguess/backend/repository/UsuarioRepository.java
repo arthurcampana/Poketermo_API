@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.pokeguess.repository;
 
 import com.example.demo.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;

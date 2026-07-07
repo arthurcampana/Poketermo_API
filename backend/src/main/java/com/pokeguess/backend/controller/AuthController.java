@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.pokeguess.controller;
 
-import com.example.demo.model.Usuario;
-import com.example.demo.repository.UsuarioRepository;
+import com.pokeguess.backend.model.Usuario;
+import com.pokeguess.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
