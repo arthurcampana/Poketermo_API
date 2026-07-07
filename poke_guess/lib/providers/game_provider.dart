@@ -8,6 +8,7 @@ class GameProvider extends ChangeNotifier {
   
   Pokemon? dailyPokemon;
   List<Guess> guesses = [];
+  List<String> pokemonList = [];
   bool isLoading = false;
   bool hasWon = false;
   String? errorMessage;
@@ -16,6 +17,10 @@ class GameProvider extends ChangeNotifier {
   Future<void> startNewGame() async {
     isLoading = true;
     notifyListeners();
+
+    if (pokemonList.isEmpty) {
+      pokemonList = await _apiService.getAllPokemonNames();
+    }
 
     int randomId = _apiService.getRandomPokemonId(maxGeneration: 1);
     dailyPokemon = await _apiService.getPokemon(randomId.toString());

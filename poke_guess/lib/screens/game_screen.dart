@@ -11,7 +11,7 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  final TextEditingController _searchController = TextEditingController();
+  TextEditingController? _autoCompleteController;
 
   @override
   void initState() {
@@ -19,12 +19,6 @@ class _GameScreenState extends State<GameScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GameProvider>(context, listen: false).startNewGame();
     });
-  }
-
-  void _submitGuess() {
-    final provider = Provider.of<GameProvider>(context, listen: false);
-    provider.makeGuess(_searchController.text);
-    _searchController.clear();
   }
 
   Color _getComparisonColor(Comparison comp) {
@@ -130,28 +124,56 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    labelText: 'Digite o nome do Pokémon',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    suffixIcon: provider.isLoading
-                        ? const Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : IconButton(
-                            icon: const Icon(Icons.send),
-                            onPressed: provider.hasWon ? null : _submitGuess,
-                          ),
-                    errorText: provider.errorMessage,
-                  ),
-                  onSubmitted: (_) => provider.hasWon ? null : _submitGuess(),
+                Autocomplete<String>(
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text.isEmpty) {
+                      return const Iterable<String>.empty();
+                    }
+                    return provider.pokemonList.where((String option) {
+                      return option.contains(textEditingValue.text.toLowerCase());
+                    });
+                  },
+                  onSelected: (String selection) {
+                    provider.makeGuess(selection);
+                    _autoCompleteController?.clear();
+                  },
+                  fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                    _autoCompleteController = controller;
+                    return TextField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        labelText: 'Digite o nome do Pokémon',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: provider.isLoading
+                            ? const Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : IconButton(
+                                icon: const Icon(Icons.send),
+                                onPressed: provider.hasWon
+                                    ? null
+                                    : () {
+                                        provider.makeGuess(controller.text);
+                                        controller.clear();
+                                      },
+                              ),
+                        errorText: provider.errorMessage,
+                      ),
+                      onSubmitted: (value) {
+                        if (!provider.hasWon) {
+                          provider.makeGuess(value);
+                          controller.clear();
+                        }
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Expanded(
