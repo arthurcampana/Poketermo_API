@@ -1,6 +1,6 @@
-package com.pokeguess.repository;
+package com.pokeguess.backend.repository;
 
-import com.example.demo.model.Usuario;
+import com.pokeguess.backend.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
