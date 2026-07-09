@@ -1,3 +1,6 @@
+
+
+
 import 'package:flutter/material.dart';
 import '../models/pokemon.dart';
 import '../models/guess.dart';
@@ -34,6 +37,10 @@ class GameProvider extends ChangeNotifier {
 
     int randomId = _apiService.getRandomPokemonId(maxGeneration: 1);
     dailyPokemon = await _apiService.getPokemon(randomId.toString());
+
+    if (dailyPokemon != null) {
+      print('>>> POKÉMON DO DIA: ${dailyPokemon!.name.toUpperCase()} (ID: ${dailyPokemon!.id})');
+    }
 
     guesses.clear();
     hasWon = false;
